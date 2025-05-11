@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">
+                <h4>Accident Severity Prediction Report</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Model Performance Metrics</h5>
+                        <div class="alert alert-info">
+                            <pre>{{ report.classification_report }}</pre>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Feature Importance</h5>
+                        <img src="data:image/png;base64,{{ report.feature_importance_plot }}" 
+                             class="img-fluid" alt="Feature Importance">
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <h5>Sample Predictions</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Time of Day</th>
+                                    <th>County</th>
+                                    <th>Road Type</th>
+                                    <th>Weather</th>
+                                    <th>Actual Severity</th>
+                                    <th>Predicted Severity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pred in report.sample_predictions %}
+                                <tr>
+                                    <td>{{ pred.time_of_day }}</td>
+                                    <td>{{ pred.county }}</td>
+                                    <td>{{ pred.road_type }}</td>
+                                    <td>{{ pred.weather }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'danger' if pred.actual == 'Fatal' else 'warning' if pred.actual == 'Major' else 'info' }}">
+                                            {{ pred.actual }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ 'danger' if pred.predicted == 'Fatal' else 'warning' if pred.predicted == 'Major' else 'info' }}">
+                                            {{ pred.predicted }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-primary" onclick="window.print()">Print Report</button>
+                <a href="/" class="btn btn-secondary">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

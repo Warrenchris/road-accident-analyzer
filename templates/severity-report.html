@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Severity Prediction Report</h2>
+    
+    <div class="alert alert-info">
+        Analyzed {{ sample_size }} accidents
+    </div>
+
+    <h4>Classification Report</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Class</th>
+                    <th>Precision</th>
+                    <th>Recall</th>
+                    <th>F1-Score</th>
+                    <th>Support</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for class_name, metrics in report.items() %}
+                    {% if class_name not in ['accuracy', 'macro avg', 'weighted avg'] %}
+                    <tr>
+                        <td>{{ class_name }}</td>
+                        <td>{{ "%.2f"|format(metrics.precision) }}</td>
+                        <td>{{ "%.2f"|format(metrics.recall) }}</td>
+                        <td>{{ "%.2f"|format(metrics['f1-score']) }}</td>
+                        <td>{{ metrics.support }}</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h4>Features Used</h4>
+    <ul>
+        {% for feature in features %}
+        <li>{{ feature }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

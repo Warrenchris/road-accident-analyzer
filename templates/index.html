@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h2>Kenya Road Accident Analysis</h2>
+        <p class="lead">
+            This tool helps analyze road accident patterns in Kenya to improve road safety.
+        </p>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Upload Accident Data</h5>
+            </div>
+            <div class="card-body">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="fileInput" class="form-label">Select data file (CSV, Excel, JSON)</label>
+                        <input class="form-control" type="file" id="fileInput" name="file" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </form>
+                <div id="uploadStatus" class="mt-3"></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5>Run Analysis</h5>
+            </div>
+            <div class="card-body">
+                <form id="analysisForm" method="POST" action="{{ url_for('analyze_data') }}">
+                    <div class="mb-3">
+                        <label class="form-label">Analysis Type</label>
+                        <select class="form-select" name="analysis_type" required>
+                            <option value="temporal">Temporal Analysis</option>
+                            <option value="spatial">Spatial Analysis</option>
+                            <option value="hotspots">Accident Hotspots</option>
+                            <option value="severity">Severity Prediction</option>
+                        </select>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Year Range</label>
+                            <select class="form-select" name="year_range">
+                                <option>2020-2022</option>
+                                <option>2018-2022</option>
+                                <option>2015-2022</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Filter by County</label>
+                            <select class="form-select" name="county_filter[]" multiple>
+                                {% for county in kenyan_counties %}
+                                <option value="{{ county }}">{{ county }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Run Analysis</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5>Quick Stats</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h6>Total Accidents</h6>
+                    <h4>{{ total_accidents }}</h4>
+                </div>
+                <div class="alert alert-warning">
+                    <h6>Fatal Accidents</h6>
+                    <h4>{{ fatal_accidents }}</h4>
+                </div>
+                <div class="alert alert-danger">
+                    <h6>Top Risk County</h6>
+                    <h4>{{ top_county }}</h4>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5>Recent Updates</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Nairobi leads in accidents (2022)</li>
+                    <li class="list-group-item">Night accidents up 15% YoY</li>
+                    <li class="list-group-item">New safety measures on Thika Road</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

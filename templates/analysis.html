@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>
+                    {% if analysis_type == 'temporal' %}
+                    Temporal Analysis Results
+                    {% else %}
+                    Spatial Analysis Results
+                    {% endif %}
+                </h4>
+            </div>
+            <div class="card-body">
+                {% if analysis_type == 'temporal' %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Yearly Trend</h5>
+                        <img src="data:image/png;base64,{{ results.yearly_trend_plot }}" 
+                             class="img-fluid" alt="Yearly Trend">
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Monthly Pattern</h5>
+                        <img src="data:image/png;base64,{{ results.monthly_pattern_plot }}" 
+                             class="img-fluid" alt="Monthly Pattern">
+                    </div>
+                </div>
+                {% else %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>By County</h5>
+                        <img src="data:image/png;base64,{{ results.by_county_plot }}" 
+                             class="img-fluid" alt="By County">
+                    </div>
+                    <div class="col-md-6">
+                        <h5>By Road Type</h5>
+                        <img src="data:image/png;base64,{{ results.by_road_type_plot }}" 
+                             class="img-fluid" alt="By Road Type">
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5>Raw Data</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                {% if analysis_type == 'temporal' %}
+                                <th>Year</th>
+                                <th>Accident Count</th>
+                                {% else %}
+                                <th>County</th>
+                                <th>Accident Count</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in results.data %}
+                            <tr>
+                                <td>{{ item[0] }}</td>
+                                <td>{{ item[1] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
